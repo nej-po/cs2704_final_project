@@ -8,14 +8,14 @@ import statsmodels.api as sm
 
 crop_filename = 'crops-1980-2025.csv'
 pop_filename  = 'population-1980-2025.csv'
-crop_columns  = ['Date', 'Type', 'Value']
+crop_columns  = ['Year', 'Type', 'Value']
 pop_columns   = ['Date', 'Location', 'Value']
 pop_df  = pd.read_csv(pop_filename, names=pop_columns, skiprows=1)
 crop_df = pd.read_csv(crop_filename, names=crop_columns, skiprows=1)
 
 # Convert dates to datetimes so we can compare them
 pop_df['Year'] = pd.to_datetime(pop_df['Date']).dt.year
-crop_df['Year'] = pd.to_datetime(crop_df['Date'], format='%Y').dt.year
+crop_df['Year'] = pd.to_datetime(crop_df['Year'], format='%Y').dt.year
 
 # Group by 'Canada', we don't need the provinces.
 # Just get the results taken in January, otherwise we'd have 4 measurements per year
