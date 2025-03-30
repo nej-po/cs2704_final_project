@@ -1,8 +1,7 @@
 import pandas as pd
 import numpy as np
-from sklearn.linear_model import LinearRegression
-from sklearn.metrics import r2_score
 import matplotlib.pyplot as plt
+import statsmodels.api as sm
 
 crop_filename = 'crops-1980-2025.csv'
 pop_filename  = 'population-1980-2025.csv'
@@ -30,16 +29,14 @@ merged.rename(columns={'Value_y':'CropYield'}, inplace=True)
 x = merged[['Population']]
 y = merged['CropYield']
 
-# Run the linear regression
-linear_model = LinearRegression()
-linear_model.fit(x, y)
-y_pred = linear_model.predict(x)
-r_squared = r2_score(y, y_pred)
-
-print(f"For every change in X, Y changes by: Regression Coefficient:  {linear_model.coef_[0]:.4f}")
-print(f"How much of the variance we can explain by variation in the population: R-squared: {r_squared:.4f}")
+# Run the linear regression, get the p-value
+x_sm = sm.add_constant(x)
+model = sm.OLS(y, x_sm)
+results = model.fit()
+print(results.summary())
 
 # Plot the linear regression
+y_pred = results.predict(x_sm)
 plt.scatter(x, y, color='blue', label='Data')
 plt.plot(x, y_pred, color='red', label='Regression Line')
 plt.title('Crop Yield vs Population')
