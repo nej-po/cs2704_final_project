@@ -1,10 +1,8 @@
 import pandas as pd
 import numpy as np
-from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LinearRegression, LogisticRegression
-from sklearn.metrics import r2_score, roc_curve, auc
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import r2_score
 import matplotlib.pyplot as plt
-import statsmodels.api as sm
 
 crop_filename = 'crops-1980-2025.csv'
 pop_filename  = 'population-1980-2025.csv'
