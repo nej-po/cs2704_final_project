@@ -36,8 +36,8 @@ linear_model.fit(x, y)
 y_pred = linear_model.predict(x)
 r_squared = r2_score(y, y_pred)
 
-print(f"Regression Coefficient: {linear_model.coef_[0]:.4f}")
-print(f"R-squared: {r_squared:.4f}")
+print(f"For every change in X, Y changes by: Regression Coefficient:  {linear_model.coef_[0]:.4f}")
+print(f"How much of the variance we can explain by variation in the population: R-squared: {r_squared:.4f}")
 
 # Plot the linear regression
 plt.scatter(x, y, color='blue', label='Data')
