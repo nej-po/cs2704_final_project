@@ -2,6 +2,8 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import statsmodels.api as sm
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import r2_score
 
 pop_df  = pd.read_csv('population-1980-2025.csv', names=['Date', 'Location', 'Value'], skiprows=1)
 crop_df = pd.read_csv('crops-1980-2025.csv', names=['Year', 'Type', 'Value'], skiprows=1)
@@ -60,7 +62,9 @@ def execute_linear_regression_totals():
     # Get the X and Y values
     x = merged[['Population']]
     y = merged['SeededAcres']
+
     results = execute_linear_regression(x,y)
+    print_summary_linear_regression_result('Totals', results)
     graph_linear_regression(x,y,results, 'Crop Seeded Acres vs Population', 'Population', 'Crop Seeded Acres')
 
 
