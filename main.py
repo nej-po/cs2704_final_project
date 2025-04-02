@@ -151,7 +151,6 @@ def show_menu():
 if __name__ == '__main__':
     selection = 0
     while True:
-        menu_num = 0
         show_menu()
         try:
             selection = int(input('::'))
