@@ -30,7 +30,7 @@ def execute_linear_regression(x, y, X_test, Y_test):
     y_pred_test = results.predict(X_test_sm) #predict on test data
 
     results.x_sm = x_sm
-    results.y_pred = results.predict(x_sm) #predict on training data
+    results.y_pred = results.predict(x_sm) #predict on trained data
     results.y_pred_test = y_pred_test 
 
     return results
@@ -47,7 +47,7 @@ def execute_linear_regression_totals():
     x = merged[['Population']]
     y = merged['Acres']
 
-    X_train, X_test, Y_train, Y_test = train_test_split(x, y, test_size=0.25, random_state=1)
+    X_train, X_test, Y_train, Y_test = train_test_split(x, y, test_size=0.3, random_state=42)
 
     results = execute_linear_regression(X_train, Y_train, X_test, Y_test)
     print_summary_linear_regression_result('Totals', results, Y_test, results.y_pred_test) 
@@ -67,7 +67,7 @@ def execute_linear_regression_individual():
         x = merged[['Population']]
         y = merged['Acres']
 
-        X_train, X_test, Y_train, Y_test = train_test_split(x,y, test_size=0.25, random_state=1)
+        X_train, X_test, Y_train, Y_test = train_test_split(x,y, test_size=0.3, random_state=42)
         
         results = execute_linear_regression(X_train, Y_train, X_test, Y_test)
         print_summary_linear_regression_result(t, results, Y_test, results.y_pred_test) #modified to use test
@@ -101,9 +101,9 @@ def generate_correlation_heatmap_totals():
 ###
 def graph_linear_regression(x, y, results, title, x_label, y_label, X_test=None, Y_test=None):
     # Plot the linear regression
-    plt.scatter(x, y, color='blue', label='Training Data')
+    plt.scatter(x, y, color='blue', label='Trained Data')
     plt.scatter(X_test, Y_test, color='green', label='Test Data')
-    plt.plot(x, results.y_pred, color='red', label='Regr. Line - Training')
+    plt.plot(x, results.y_pred, color='red', label='Regr. Line - Trained')
     plt.plot(X_test, results.y_pred_test, color='orange', label='Regr. Line - Test')
     plt.title(title)
     plt.xlabel(x_label)
@@ -142,7 +142,7 @@ def show_menu():
     print('2: Linear Regression - Individual Crop')
     print('3: Correlation Heatmap')
     print('4: Descriptive Statistics - Population') 
-    print('5: Exit')
+    print('5: Exit (Ctrl-C)')
 
 
 ###
