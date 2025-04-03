@@ -32,15 +32,13 @@ def execute_linear_regression(x, y, X_test, Y_test):
     results.x_sm = x_sm
     results.y_pred = results.predict(x_sm) #predict on trained data
     results.y_pred_test = y_pred_test 
-
     return results
 
 
 ###
 # Execute a linear regression test for crops nationwide
 ###
-def execute_linear_regression_totals():
-    canada_pop = pop_df[(pop_df['Location'] == 'Canada') & (pop_df['Date'].str.endswith('-01'))]
+def execute_linear_regression_totals(graph = False):
     seeded_acres = crop_df.groupby('Year')['Acres'].sum().reset_index()
     merged = pd.merge(canada_pop, seeded_acres, on='Year')
 
@@ -51,7 +49,9 @@ def execute_linear_regression_totals():
 
     results = execute_linear_regression(X_train, Y_train, X_test, Y_test)
     print_summary_linear_regression_result('Totals', results, Y_test, results.y_pred_test) 
-    graph_linear_regression(X_train, Y_train, results, 'Crop Seeded Acres vs Population', 'Population', 'Crop Seeded Acres', X_test, Y_test) 
+    if (graph):
+        graph_linear_regression(X_train, Y_train, results, 'Crop Seeded Acres vs Population', 'Population', 'Crop Seeded Acres', X_test, Y_test) 
+    return results
 
 
 ###
@@ -101,15 +101,36 @@ def generate_correlation_heatmap_totals():
 ###
 def graph_linear_regression(x, y, results, title, x_label, y_label, X_test=None, Y_test=None):
     # Plot the linear regression
-    plt.scatter(x, y, color='blue', label='Trained Data')
+    plt.scatter(x, y, color='blue', label='Training Data')
     plt.scatter(X_test, Y_test, color='green', label='Test Data')
-    plt.plot(x, results.y_pred, color='red', label='Regr. Line - Trained')
+    plt.plot(x, results.y_pred, color='red', label='Regr. Line - Training')
     plt.plot(X_test, results.y_pred_test, color='orange', label='Regr. Line - Test')
     plt.title(title)
     plt.xlabel(x_label)
     plt.ylabel(y_label)
     plt.legend()
     plt.show()
+
+
+###
+# Get a prediction based on totals, allows user to input the population to predict
+###
+def run_prediction_totals():
+    results = execute_linear_regression_totals()
+    prediction = int(input('Enter population value to predict total acreage:'))
+    predicted_acres = predict_totals(results, prediction)
+    print(f'\tPredicted acreage with pop({prediction}) : {predicted_acres[0]:.0f}' )
+    return 1
+
+
+###
+# Predict based on the incoming model and prediction request
+###
+def predict_totals(results, prediction):
+    numeric_prediction_value = float(prediction)
+    new_data_array = np.array([[1.0, numeric_prediction_value]])
+    predicted_acres = results.predict(new_data_array)
+    return predicted_acres
 
 
 ###
@@ -127,7 +148,7 @@ def print_descriptive_stats_population():
 # Print the stats for a linear regression analysis
 ###
 def print_summary_linear_regression_result(crop_type, results, Y_test=None, y_pred_test=None):
-    print(f'Crop type [{crop_type}]:')
+    print(f'Crop type [{crop_type}] model statistics: ')
     print(f'\tP-value: {results.pvalues[f'Population']:.6f}')
     print(f'\tRegresson coefficient: {results.params[f'Population']:.6f}')
     print(f'\tR-squared (Training): {results.rsquared:.6f}')
@@ -142,7 +163,8 @@ def show_menu():
     print('2: Linear Regression - Individual Crop')
     print('3: Correlation Heatmap')
     print('4: Descriptive Statistics - Population') 
-    print('5: Exit (Ctrl-C)')
+    print('5: Predictions - Total Crops')
+    print('6: Exit (Ctrl-C)')
 
 
 ###
@@ -157,12 +179,14 @@ if __name__ == '__main__':
         except:
             break 
         if (selection == 1):
-            execute_linear_regression_totals()
+            execute_linear_regression_totals(True)
         elif (selection == 2):
             execute_linear_regression_individual()
         elif (selection == 3):
             generate_correlation_heatmap_totals()
         elif (selection == 4):
             print_descriptive_stats_population()
+        elif (selection == 5):
+            run_prediction_totals()
         else:
             break
