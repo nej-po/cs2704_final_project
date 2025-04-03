@@ -5,6 +5,8 @@ import matplotlib.pyplot as plt
 import statsmodels.api as sm
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import r2_score
+import time
+import sys
 
 pop_df  = pd.read_csv('population-1980-2025.csv', names=['Date', 'Location', 'Population'], skiprows=1)
 crop_df = pd.read_csv('crops-1980-2025.csv', names=['Year', 'Type', 'Acres'], skiprows=1)
@@ -48,7 +50,7 @@ def execute_linear_regression_totals(graph = False):
     X_train, X_test, Y_train, Y_test = train_test_split(x, y, test_size=0.3, random_state=42)
 
     results = execute_linear_regression(X_train, Y_train, X_test, Y_test)
-    print_summary_linear_regression_result('Totals', results, Y_test, results.y_pred_test) 
+    print_linear_regression_model_stats('Totals', results, Y_test, results.y_pred_test) 
     if (graph):
         graph_linear_regression(X_train, Y_train, results, 'Crop Seeded Acres vs Population', 'Population', 'Crop Seeded Acres', X_test, Y_test) 
     return results
@@ -70,7 +72,7 @@ def execute_linear_regression_individual():
         X_train, X_test, Y_train, Y_test = train_test_split(x,y, test_size=0.3, random_state=42)
         
         results = execute_linear_regression(X_train, Y_train, X_test, Y_test)
-        print_summary_linear_regression_result(t, results, Y_test, results.y_pred_test) #modified to use test
+        print_linear_regression_model_stats(t, results, Y_test, results.y_pred_test) #modified to use test
         continue   
 
 
@@ -117,7 +119,7 @@ def graph_linear_regression(x, y, results, title, x_label, y_label, X_test=None,
 ###
 def run_prediction_totals():
     results = execute_linear_regression_totals()
-    prediction = int(input('Enter population value to predict total acreage:'))
+    prediction = int(input('Enter population value to predict total acreage: '))
     predicted_acres = predict_totals(results, prediction)
     print(f'\tPredicted acreage with pop({prediction}) : {predicted_acres[0]:.0f}' )
     return 1
@@ -147,7 +149,7 @@ def print_descriptive_stats_population():
 ###
 # Print the stats for a linear regression analysis
 ###
-def print_summary_linear_regression_result(crop_type, results, Y_test=None, y_pred_test=None):
+def print_linear_regression_model_stats(crop_type, results, Y_test=None, y_pred_test=None):
     print(f'Crop type [{crop_type}] model statistics: ')
     print(f'\tP-value: {results.pvalues[f'Population']:.6f}')
     print(f'\tRegresson coefficient: {results.params[f'Population']:.6f}')
@@ -159,12 +161,14 @@ def print_summary_linear_regression_result(crop_type, results, Y_test=None, y_pr
 # Does exactly what it says - print the console menu.
 ###
 def show_menu():
+    print('---------------------------------------')
     print('1: Linear Regression - Total Crops')
     print('2: Linear Regression - Individual Crop')
     print('3: Correlation Heatmap')
     print('4: Descriptive Statistics - Population') 
     print('5: Predictions - Total Crops')
     print('6: Exit (Ctrl-C)')
+    print('---------------------------------------')
 
 
 ###
@@ -175,7 +179,7 @@ if __name__ == '__main__':
     while True:
         show_menu()
         try:
-            selection = int(input('::'))
+            selection = int(input('Selection: '))
         except:
             break 
         if (selection == 1):
@@ -190,3 +194,6 @@ if __name__ == '__main__':
             run_prediction_totals()
         else:
             break
+        input("Input to return to menu... ")  
+
+
