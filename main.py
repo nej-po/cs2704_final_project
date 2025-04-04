@@ -197,14 +197,14 @@ if __name__ == '__main__':
             execute_linear_regression_totals(True)
         elif (selection == 2):
             execute_linear_regression_individual()
-        elif (selection == 6):
-            generate_correlation_heatmap_totals()
         elif (selection == 3):
             print_descriptive_stats_population()
-        elif (selection == 5):
-            run_prediction_totals()
         elif (selection == 4):
             print_descriptive_stats_crop_totals()
+        elif (selection == 5):
+            run_prediction_totals()
+        elif (selection == 6):
+            generate_correlation_heatmap_totals()
         else:
             break
         input("Input to return to menu... ")  
