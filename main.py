@@ -5,9 +5,10 @@ import matplotlib.pyplot as plt
 import statsmodels.api as sm
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import r2_score
+import os
 
-pop_df  = pd.read_csv('population-1980-2025.csv', names=['Date', 'Location', 'Population'], skiprows=1)
-crop_df = pd.read_csv('crops-1980-2025.csv', names=['Year', 'Type', 'Acres'], skiprows=1)
+pop_df  = pd.read_csv(os.path.join('Data', 'population-1980-2025.csv'), names=['Date', 'Location', 'Population'], skiprows=1)
+crop_df = pd.read_csv(os.path.join('Data', 'crops-1980-2025.csv'), names=['Year', 'Type', 'Acres'], skiprows=1)
 
 # Convert date strings to datetimes so we can compare them
 pop_df['Year'] = pd.to_datetime(pop_df['Date']).dt.year
