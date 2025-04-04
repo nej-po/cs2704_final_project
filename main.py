@@ -70,7 +70,7 @@ def execute_linear_regression_individual():
         X_train, X_test, Y_train, Y_test = train_test_split(x,y, test_size=0.3, random_state=42)
         
         results = execute_linear_regression(X_train, Y_train, X_test, Y_test)
-        print_linear_regression_model_stats(t, results, Y_test, results.y_pred_test) #modified to use test
+        print_linear_regression_model_stats(t, results, Y_test, results.y_pred_test) 
         continue   
 
 
