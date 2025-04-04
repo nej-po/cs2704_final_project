@@ -28,10 +28,9 @@ def execute_linear_regression(x, y, X_test, Y_test):
     model = sm.OLS(y, x_sm)
     results = model.fit()
     X_test_sm = sm.add_constant(X_test)
-    y_pred_test = results.predict(X_test_sm) #predict on test data
-
+    y_pred_test = results.predict(X_test_sm) 
     results.x_sm = x_sm
-    results.y_pred = results.predict(x_sm) #predict on trained data
+    results.y_pred = results.predict(x_sm) 
     results.y_pred_test = y_pred_test 
     return results
 
@@ -86,7 +85,7 @@ def generate_correlation_heatmap_totals():
     for t in crop_types['Type'].unique():
         filtered_crop = crop_types[crop_types['Type'] == t]
         filtered_crop = filtered_crop.rename(columns={'Acres': t})
-        merged_data = pd.merge(merged_data, filtered_crop[['Year', t]], on='Year', how='left') #modified to use new column name
+        merged_data = pd.merge(merged_data, filtered_crop[['Year', t]], on='Year', how='left')
 
     correlation_matrix = merged_data.drop('Year', axis=1).corr()
 
@@ -150,7 +149,6 @@ def print_descriptive_stats_population():
 
 def print_descriptive_stats_crop_totals():
     seeded_acres = crop_df.groupby('Year')['Acres'].sum().reset_index()
-    print(seeded_acres)
     print(f'[Total Crop Descriptive Stats]')
     print(f'\tMean: {int(seeded_acres['Acres'].mean())}')
     print(f'\tMedian: {int(seeded_acres['Acres'].median())}')
