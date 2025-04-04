@@ -5,8 +5,6 @@ import matplotlib.pyplot as plt
 import statsmodels.api as sm
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import r2_score
-import time
-import sys
 
 pop_df  = pd.read_csv('population-1980-2025.csv', names=['Date', 'Location', 'Population'], skiprows=1)
 crop_df = pd.read_csv('crops-1980-2025.csv', names=['Year', 'Type', 'Acres'], skiprows=1)
@@ -122,7 +120,6 @@ def run_prediction_totals():
     prediction = int(input('Enter population value to predict total acreage: '))
     predicted_acres = predict_totals(results, prediction)
     print(f'\tPredicted acreage with pop({prediction}) : {predicted_acres[0]:.0f}' )
-    return 1
 
 
 ###
@@ -147,6 +144,20 @@ def print_descriptive_stats_population():
 
 
 ###
+# Print descriptive stats for the total crops
+###
+
+def print_descriptive_stats_crop_totals():
+    seeded_acres = crop_df.groupby('Year')['Acres'].sum().reset_index()
+    print(seeded_acres)
+    print(f'[Total Crop Descriptive Stats]')
+    print(f'\tMean: {int(seeded_acres['Acres'].mean())}')
+    print(f'\tMedian: {int(seeded_acres['Acres'].median())}')
+    print(f'\tStandard dev: {int(seeded_acres['Acres'].std())}')
+    print(f'\tVariance: {int(seeded_acres['Acres'].var())}')
+
+
+###
 # Print the stats for a linear regression analysis
 ###
 def print_linear_regression_model_stats(crop_type, results, Y_test=None, y_pred_test=None):
@@ -162,12 +173,13 @@ def print_linear_regression_model_stats(crop_type, results, Y_test=None, y_pred_
 ###
 def show_menu():
     print('---------------------------------------')
-    print('1: Linear Regression - Total Crops')
+    print('1: Linear Regression - Crop Totals')
     print('2: Linear Regression - Individual Crop')
-    print('3: Correlation Heatmap')
-    print('4: Descriptive Statistics - Population') 
-    print('5: Predictions - Total Crops')
-    print('6: Exit (Ctrl-C)')
+    print('3: Descriptive Statistics - Population') 
+    print('4: Descriptive Statistics - Crop Totals')
+    print('5: Predictive Analytics')
+    print('6: Correlation Heatmap')
+    print('7: Exit (Ctrl-C)')
     print('---------------------------------------')
 
 
@@ -186,12 +198,14 @@ if __name__ == '__main__':
             execute_linear_regression_totals(True)
         elif (selection == 2):
             execute_linear_regression_individual()
-        elif (selection == 3):
+        elif (selection == 6):
             generate_correlation_heatmap_totals()
-        elif (selection == 4):
+        elif (selection == 3):
             print_descriptive_stats_population()
         elif (selection == 5):
             run_prediction_totals()
+        elif (selection == 4):
+            print_descriptive_stats_crop_totals()
         else:
             break
         input("Input to return to menu... ")  
