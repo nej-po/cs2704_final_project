@@ -155,6 +155,22 @@ def print_descriptive_stats_crop_totals():
     print(f'\tStandard dev: {int(seeded_acres['Acres'].std())}')
     print(f'\tVariance: {int(seeded_acres['Acres'].var())}')
 
+###
+# Print descriptive stat for the individual crops
+###
+
+def print_descriptive_stats_Individual_crop():
+    crop_stats = crop_df.groupby('Type')['Acres'].agg(['mean', 'median', 'std', 'var'])
+
+    # Print statistics for each crop
+    for crop_type, stats in crop_stats.iterrows():
+        print(f"Descriptive Statistics for {crop_type}:")
+        print(f"\tMean: {stats['mean']:.2f}")
+        print(f"\tMedian: {stats['median']:.2f}")
+        print(f"\tStandard deviation: {stats['std']:.2f}")
+        print(f"\tVariance: {stats['var']:.2f}")
+        print()
+
 
 ###
 # Print the stats for a linear regression analysis
@@ -178,7 +194,8 @@ def show_menu():
     print('4: Descriptive Statistics - Crop Totals')
     print('5: Predictive Analytics')
     print('6: Correlation Heatmap')
-    print('7: Exit (Ctrl-C)')
+    print('7: Descriptive Statistics - Individual Crops')
+    print('8: Exit (Ctrl-C)')
     print('---------------------------------------')
 
 
@@ -205,6 +222,8 @@ if __name__ == '__main__':
             run_prediction_totals()
         elif (selection == 6):
             generate_correlation_heatmap_totals()
+        elif (selection == 7):
+            print_descriptive_stats_Individual_crop()
         else:
             break
         input("Input to return to menu... ")  
